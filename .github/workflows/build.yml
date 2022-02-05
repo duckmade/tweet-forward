@@ -1,0 +1,18 @@
+name: Build and push new Docker image
+on: [push]
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.4.0
+
+      - name: Docker Build & Push
+        uses: mr-smithers-excellent/docker-build-push@v5.6
+        with:
+          image: tweet-forward
+          registry: ghcr.io
+          addLatest: ${{ github.ref_name == 'main' }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          buildArgs: TELEGRAM_ID=${{ secrets.TELEGRAM_ID}},TELEGRAM_HASH=${{ secrets.TELEGRAM_HASH}},TELEGRAM_TOKEN=${{ secrets.TELEGRAM_TOKEN}}
