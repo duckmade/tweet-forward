@@ -1,4 +1,4 @@
-FROM python:3-slim
+FROM python:3-alpine
 
 # Install requirements, copy files and set workdir.
 COPY requirements.txt .

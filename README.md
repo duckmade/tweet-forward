@@ -8,8 +8,8 @@ This image provides various versions that are available via tags. `latest` tag u
 
 | Tag | Description |
 | :----: | --- |
-| latest | Stable TweetForward releases |
-| (branch)-(commit) | Unstable TweetForward releases |
+| latest | Stable release |
+| (branch)-(commit) | Unstable releases |
 
 ## Application Setup
 
@@ -33,7 +33,7 @@ Create a Telegram bot through [@BotFather](https://t.me/botfather/) and copy you
 
 #### 2.2 Use the default Telegram bot
 
-Simply add our default bot, [DUCKMADE TweetForward](https://t.me/duckmade_tweet_forward_bot), to your desired channel as an admin. This channel is where you’ll receive tweets.
+Simply add our default bot, [TweetForward](https://t.me/duckmade_tweet_forward_bot), to your desired channel as an admin. This channel is where you’ll receive tweets.
 
 ## Usage
 
@@ -56,6 +56,7 @@ services:
       - ACCESS_SECRET: <secret>
       - FOLLOW: <user-ids>
       - TRACK: <topics>
+      - LOCATION: <location>
 ```
 
 ### docker cli
@@ -70,6 +71,7 @@ docker run -d \
   -e ACCESS_SECRET=<secret> \
   -e FOLLOW=<user-ids> \
   -e TRACK=<topics> \
+  -e LOCATION=<locations> \
   ghrc.io/duckmade/tweet-forward
 ```
 
@@ -85,6 +87,7 @@ Container images are configured using parameters passed at runtime (such as thos
 | `-e ACCESS_SECRET=<secret>` | Twitter access token secret |
 | `-e FOLLOW=<user-ids>` | Optional - Comma separated string of Twitter user ID's |
 | `-e TRACK=<topics>` | Optional - Comma separated string of Twitter topics |
+| `-e LOCATION=<locations>` | Optional - Comma separated string of Twitter locations |
 | `-e RETWEETS=<boolean>` | Optional - Do you want to forward retweets? |
 | `-e CLIENTS=<clients>` | Optional - Comma separated string of forward clients to use. *Pick from: `telegram`.* |
 | `-e TELEGRAM_CHANNEL=<channel>` | Optional - Telegram channel to forward to. Required when `telegram` client is used. |

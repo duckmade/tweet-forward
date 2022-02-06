@@ -22,32 +22,46 @@ async def main():
         logging.error("Required key not found: %s", error)
 
     # Optional parameters
-    FOLLOW = os.environ.get('FOLLOW', '').split(',')
-    TRACK = os.environ.get('TRACK', '').split(',')
-    RETWEETS = os.environ.get('RETWEETS', False)
+    FOLLOW = os.environ.get('FOLLOW')
+    if isinstance(FOLLOW, str):
+        FOLLOW = FOLLOW.split(',')
+
+    TRACK = os.environ.get('TRACK')
+    if isinstance(TRACK, str):
+        TRACK = TRACK.split(',')
+
+    LOCATION = os.environ.get('LOCATION')
+    if isinstance(LOCATION, str):
+        LOCATION = [float(l) for l in LOCATION.split(',')]
+
+    RETWEETS = False
+    if os.environ.get('RETWEETS'):
+        RETWEETS = True
+
     CLIENTS = os.environ.get('CLIENTS')
+    if isinstance(CLIENTS, str):
+        CLIENTS = CLIENTS.split(',')
 
     logging.info('Creating clients...')
     clients = []
-    if CLIENTS:
-        for client in CLIENTS.split(','):
-            if client == 'telegram':
-                try:
-                    TELEGRAM_ID = os.environ['TELEGRAM_ID']
-                    TELEGRAM_HASH = os.environ['TELEGRAM_HASH']
-                    TELEGRAM_TOKEN = os.environ['TELEGRAM_TOKEN']
-                    TELEGRAM_CHANNEL = os.environ['TELEGRAM_CHANNEL']
-                    clients.append(
-                        TelegramClient(
-                            api_id=TELEGRAM_ID,
-                            api_hash=TELEGRAM_HASH,
-                            bot_token=TELEGRAM_TOKEN,
-                            channel=TELEGRAM_CHANNEL
-                        ))
-                except KeyError as client_error:
-                    logging.error('Required key not found: %s', client_error)
-            else:
-                logging.warning('Client not supported : %s', client)
+    for c in CLIENTS:
+        if c == 'telegram':
+            try:
+                TELEGRAM_ID = os.environ['TELEGRAM_ID']
+                TELEGRAM_HASH = os.environ['TELEGRAM_HASH']
+                TELEGRAM_TOKEN = os.environ['TELEGRAM_TOKEN']
+                TELEGRAM_CHANNEL = os.environ['TELEGRAM_CHANNEL']
+                clients.append(
+                    TelegramClient(
+                        api_id=TELEGRAM_ID,
+                        api_hash=TELEGRAM_HASH,
+                        bot_token=TELEGRAM_TOKEN,
+                        channel=TELEGRAM_CHANNEL
+                    ))
+            except KeyError as c_error:
+                logging.error('Required key not found: %s', c_error)
+        else:
+            logging.warning('Client not supported : %s', c)
     logging.info('Done.')
 
     if len(clients) > 0:
@@ -63,6 +77,7 @@ async def main():
             await stream.filter(
                 follow=FOLLOW,
                 track=TRACK,
+                locations=LOCATION,
                 stall_warnings=True
             )
         except KeyboardInterrupt:
